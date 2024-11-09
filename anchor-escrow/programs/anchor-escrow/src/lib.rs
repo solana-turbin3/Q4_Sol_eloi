@@ -1,9 +1,9 @@
 use anchor_lang::prelude::*;
 
-declare_id!("dfH8kKzBEKm28HoQysiPoU8qaYMxVg7vC2grFu9BFAR");
+declare_id!("3MgDysPWFE1qLV4WKAHirhLZoBHDJUALE6Goz8sqo4Lb");
 
 #[program]
-pub mod escrow {
+pub mod anchor_escrow {
     use super::*;
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
