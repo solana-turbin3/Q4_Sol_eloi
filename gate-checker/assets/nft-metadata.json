@@ -1,0 +1,10 @@
+{
+  "name": "Turbin3",
+  "symbol": "TRB",
+  "description": "Turbin3's NFT",
+  "seller_fees_basis_points": 0,
+  "external_url": "https://turbin3.com",
+  "edition": "",
+  "background_color": "#000000",
+  "image": "https://github.com/eloiweb3/gate-checker/blob/main/assets/NFT-QR.png?raw=true"
+}
