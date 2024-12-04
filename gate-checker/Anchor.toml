@@ -5,7 +5,7 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-gate_checker = "AxHYoHCrLoobW8RvbATQYFvytzeyTwxPYgynBTFLPHPw"
+gate_checker = "4pMPBXhpVg4s9S7jHksWNv5gs6Q2RSFtxQx3aVuARpy8"
 
 [registry]
 url = "https://api.apr.dev"

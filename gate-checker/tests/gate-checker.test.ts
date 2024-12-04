@@ -29,7 +29,7 @@ describe('NFT_mint', () => {
   const payer = program.provider.publicKey;
 
   const metadata = {
-    name: 'Turbin3 token_',
+    name: 'Turbin3 NFT',
     symbol: 'TRB',
     uri: "https://raw.githubusercontent.com/eloiweb3/gate-checker/refs/heads/main/assets/nft-metadata.json",
     decimals: 0
@@ -49,14 +49,20 @@ describe('NFT_mint', () => {
 
   const log = async (signature: string): Promise<string> => {
     console.log(
-      `Your transaction signature: https://explorer.solana.com/transaction/${signature}?cluster=custom&customUrl=${connection.rpcEndpoint}`
+      `Your transaction signature: https://explorer.solana.com/transaction/${signature}?cluster=devnet`
     );
     return signature;
   };
+
   const mintAuthority = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from('authority')],
+    [Buffer.from('mintTurbin3')],
     program.programId
   )[0];
+
+//   const fromAuthority = anchor.web3.PublicKey.findProgramAddressSync(
+//     [Buffer.from('authority')],
+//     program.programId
+//   )[0];
 
   it('Initialize Token', async () => {
     const info = await program.provider.connection.getAccountInfo(mint);
@@ -102,7 +108,7 @@ describe('NFT_mint', () => {
 
     const context = {
       mint,
-      destinationAtaV1: destination,
+      destinationAta: destination,
       payer,
       rent: SYSVAR_RENT_PUBKEY,
       systemProgram: SystemProgram.programId,
@@ -127,15 +133,7 @@ describe('NFT_mint', () => {
   it('Transfer token', async () => {
     const key = anchor.AnchorProvider.env().wallet.publicKey;
     // Generate a random keypair that will represent our token
-    console.log('key', key);
-    // const mintKey: anchor.web3.Keypair = anchor.web3.Keypair.generate();
-    let associatedTokenAccount1 = await getAssociatedTokenAddress(mint, key);
-    // let associatedTokenAccount2 = await getAssociatedTokenAddress(mint, key);
-    // let associatedTokenAccount3 = await getAssociatedTokenAddress(mint, key);
-    // let associatedTokenAccount4 = await getAssociatedTokenAddress(mint, key);
-    // let associatedTokenAccount5 = await getAssociatedTokenAddress(mint, key);
-    // Get anchor's wallet's public key
-    // const myWallet = anchor.AnchorProvider.env().wallet.publicKey;
+    let associatedTokenAccount = await getAssociatedTokenAddress(mint, key);
     // Wallet that will receive the token
     const toWallet1: anchor.web3.Keypair = anchor.web3.Keypair.generate();
     const toWallet2: anchor.web3.Keypair = anchor.web3.Keypair.generate();
@@ -150,7 +148,6 @@ describe('NFT_mint', () => {
     const toATA5 = await getAssociatedTokenAddress(mint, toWallet5.publicKey);
     // Fires a list of instructions
     const mint_tx1 = new anchor.web3.Transaction().add(
-      // Create the ATA account that is associated with our To wallet
       createAssociatedTokenAccountInstruction(
         key,
         toATA1,
@@ -158,8 +155,8 @@ describe('NFT_mint', () => {
         mint
       )
     );
+
     const mint_tx2 = new anchor.web3.Transaction().add(
-      // Create the ATA account that is associated with our To wallet
       createAssociatedTokenAccountInstruction(
         key,
         toATA2,
@@ -167,8 +164,8 @@ describe('NFT_mint', () => {
         mint
       )
     );
+
     const mint_tx3 = new anchor.web3.Transaction().add(
-      // Create the ATA account that is associated with our To wallet
       createAssociatedTokenAccountInstruction(
         key,
         toATA3,
@@ -176,8 +173,8 @@ describe('NFT_mint', () => {
         mint
       )
     );
+
     const mint_tx4 = new anchor.web3.Transaction().add(
-      // Create the ATA account that is associated with our To wallet
       createAssociatedTokenAccountInstruction(
         key,
         toATA4,
@@ -185,8 +182,8 @@ describe('NFT_mint', () => {
         mint
       )
     );
+
     const mint_tx5 = new anchor.web3.Transaction().add(
-      // Create the ATA account that is associated with our To wallet
       createAssociatedTokenAccountInstruction(
         key,
         toATA5,
@@ -214,43 +211,47 @@ describe('NFT_mint', () => {
       .transferToken()
       .accounts({
         tokenProgram: TOKEN_PROGRAM_ID,
-        from: associatedTokenAccount1,
+        from: associatedTokenAccount,
         fromAuthority: key,
         to: toATA1
       })
       .rpc();
+
      const txHash2 =  await program.methods
       .transferToken()
       .accounts({
         tokenProgram: TOKEN_PROGRAM_ID,
-        from: associatedTokenAccount1,
+        from: associatedTokenAccount,
         fromAuthority: key,
         to: toATA2
       })
       .rpc();
+
      const txHash3 =  await program.methods
       .transferToken()
       .accounts({
         tokenProgram: TOKEN_PROGRAM_ID,
-        from: associatedTokenAccount1,
+        from: associatedTokenAccount,
         fromAuthority: key,
         to: toATA3
       })
       .rpc();
+
      const txHash4 =  await program.methods
       .transferToken()
       .accounts({
         tokenProgram: TOKEN_PROGRAM_ID,
-        from: associatedTokenAccount1,
+        from: associatedTokenAccount,
         fromAuthority: key,
         to: toATA4
       })
       .rpc();
+
      const txHash5 =  await program.methods
       .transferToken()
       .accounts({
         tokenProgram: TOKEN_PROGRAM_ID,
-        from: associatedTokenAccount1,
+        from: associatedTokenAccount,
         fromAuthority: key,
         to: toATA5
       })
@@ -264,13 +265,21 @@ describe('NFT_mint', () => {
 
       await program.provider.connection.confirmTransaction(txHash1); // Confirm the transaction
 
-    // Get minted token amount on the ATA for our anchor wallet
-    const minted = (await program.provider.connection.getParsedAccountInfo(associatedTokenAccount1))
-      .value
-
-      console.log('minted', minted);
-
-      //log(txHash);
-    // assert.equal(minted, 0, 'Minted should be 0');
+    // Get ATA's info and check if each of them contain 1 NFT/token
+    const ATA1AmountToken = (await program.provider.connection.getParsedAccountInfo(toATA1)).value.data.parsed.info.tokenAmount.amount;
+    const ATA2AmountToken = (await program.provider.connection.getParsedAccountInfo(toATA1)).value.data.parsed.info.tokenAmount.amount;
+    const ATA3AmountToken = (await program.provider.connection.getParsedAccountInfo(toATA1)).value.data.parsed.info.tokenAmount.amount;
+    const ATA4AmountToken = (await program.provider.connection.getParsedAccountInfo(toATA1)).value.data.parsed.info.tokenAmount.amount;
+    const ATA5AmountToken = (await program.provider.connection.getParsedAccountInfo(toATA1)).value.data.parsed.info.tokenAmount.amount;
+      console.log('ATA1AmountToken', ATA1AmountToken);
+      console.log('ATA2AmountToken', ATA2AmountToken);
+      console.log('ATA3AmountToken', ATA3AmountToken);
+      console.log('ATA4AmountToken', ATA4AmountToken);
+      console.log('ATA5AmountToken', ATA5AmountToken);
+    assert.equal(ATA1AmountToken, 1, 'Should contain 1 NFT/token');
+    assert.equal(ATA2AmountToken, 1, 'Should contain 1 NFT/token');
+    assert.equal(ATA3AmountToken, 1, 'Should contain 1 NFT/token');
+    assert.equal(ATA4AmountToken, 1, 'Should contain 1 NFT/token');
+    assert.equal(ATA5AmountToken, 1, 'Should contain 1 NFT/token');
   });
 });

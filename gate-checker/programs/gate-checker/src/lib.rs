@@ -10,7 +10,7 @@ use anchor_spl::{
     token::{ mint_to, transfer, Mint, MintTo, Token, TokenAccount, Transfer as SplTransfer },
 };
 
-declare_id!("AxHYoHCrLoobW8RvbATQYFvytzeyTwxPYgynBTFLPHPw");
+declare_id!("4pMPBXhpVg4s9S7jHksWNv5gs6Q2RSFtxQx3aVuARpy8");
 
 #[program]
 mod gate_checker {
@@ -59,7 +59,7 @@ mod gate_checker {
                 ctx.accounts.token_program.to_account_info(),
                 MintTo {
                     authority: ctx.accounts.mint.to_account_info(),
-                    to: ctx.accounts.destination_ata_v1.to_account_info(),
+                    to: ctx.accounts.destination_ata.to_account_info(),
                     mint: ctx.accounts.mint.to_account_info(),
                 },
                 &signer
@@ -146,7 +146,7 @@ pub struct MintNFTs<'info> {
         associated_token::mint = mint,
         associated_token::authority = payer
     )]
-    pub destination_ata_v1: Account<'info, TokenAccount>,
+    pub destination_ata: Account<'info, TokenAccount>,
     pub rent: Sysvar<'info, Rent>,
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
