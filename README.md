@@ -16,6 +16,11 @@
   - **Mint 5 NFTs.**
   - **Transfer each NFT** to its corresponding public key/wallet/owner.
 
+### Deployment devnet
+
+- Program ID: HujPJdPoMaxWPQDaTAffxyjz41PqbnDfuWkBWBF187RQ
+- Signature: 2UGmMS6MXNrwg9UCBmF57cFFh6hyQNJhenZ1qxJTiEx1jjJjsLPGXzgmpxPiptCgKJvfKjVdPuxvuhCwU28MCt8o
+
 ### Technologies Used
 
 - ![Solana Badge](https://img.shields.io/badge/Blockchain-Solana-blueviolet)
